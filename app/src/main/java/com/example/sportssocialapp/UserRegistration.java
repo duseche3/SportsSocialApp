@@ -1,44 +1,34 @@
 package com.example.sportssocialapp;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.EditText;
 
-public class UserRegistration extends Fragment {
+public class UserRegistration extends Activity {
+
+    EditText dobText;
+
 
     public UserRegistration() {
         // Required empty public constructor
     }
 
-    public static UserRegistration newInstance(String param1, String param2) {
-        UserRegistration fragment = new UserRegistration();
-        //Bundle args = new Bundle();
-
-        //fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.user_registration);
 
+        dobText = (EditText) findViewById(R.id.userDob);
+        dobText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Test","Worked");
+            }
+        });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_registration, container, false);
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
 
 }
