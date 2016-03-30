@@ -1,10 +1,11 @@
 package com.example.sportssocialapp;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,9 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -20,21 +24,29 @@ import java.text.DateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserRegistration extends Activity {
+public class UserRegistrationActivity extends Activity {
+    private final static String TAG = "UserRegistrationActivity";
+
+    Firebase ref;
 
     EditText dobText;
     DatePickerDialog dobDialog;
     DateFormat dateFormat;
     Button submit;
 
-    public UserRegistration() {
+    public UserRegistrationActivity() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_registration);
+        setContentView(R.layout.activity_user_registration);
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         dobText = (EditText) findViewById(R.id.userDob);
@@ -43,7 +55,7 @@ public class UserRegistration extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validate()){
+                if (validate()){
                     // create account
                 }
             }
@@ -65,6 +77,18 @@ public class UserRegistration extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 dobDialog.show();
                 return false;
+            }
+        });
+
+
+        ref = new Firebase(BuildConfig.FIREBASE_URL);
+        ref.addAuthStateListener(new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (authData != null) {
+                    Intent intent = new Intent(UserRegistrationActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

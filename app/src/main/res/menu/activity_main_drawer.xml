@@ -33,4 +33,12 @@
         </menu>
     </item>
 
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/log_out"
+                android:title="Log Out" />
+        </menu>
+    </item>
+
 </menu>

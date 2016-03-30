@@ -14,8 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    Firebase ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +47,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent myIntent = new Intent(this, UserRegistration.class);
+//        Intent myIntent = new Intent(this, UserRegistrationActivity.class);
+//
+//        startActivity(myIntent);
 
-        startActivity(myIntent);
+        ref = new Firebase(BuildConfig.FIREBASE_URL);
+        ref.addAuthStateListener(new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (authData == null) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -97,6 +113,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.log_out) {
+            ref.unauth();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
