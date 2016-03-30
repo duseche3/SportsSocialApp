@@ -2,6 +2,7 @@
     <string name="app_name">Sports Social</string>
     <string name="title_activity_main">Home</string>
     <string name="title_activity_login">Log In</string>
+    <string name="title_activity_user_registration">Register</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

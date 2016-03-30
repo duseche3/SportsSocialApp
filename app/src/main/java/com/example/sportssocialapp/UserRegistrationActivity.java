@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -33,10 +34,6 @@ public class UserRegistrationActivity extends Activity {
     DatePickerDialog dobDialog;
     DateFormat dateFormat;
     Button submit;
-
-    public UserRegistrationActivity() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +85,7 @@ public class UserRegistrationActivity extends Activity {
                 if (authData != null) {
                     Intent intent = new Intent(UserRegistrationActivity.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -128,10 +126,7 @@ public class UserRegistrationActivity extends Activity {
         // email error checking
         String email = ((EditText) findViewById(R.id.userEmail)).getText().toString().trim().toLowerCase();
         if(!email.equals("")) {
-            String regex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(email);
-            if (!matcher.matches()) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 emailErr.setVisibility(View.VISIBLE);
                 emailInvalid = true;
             }

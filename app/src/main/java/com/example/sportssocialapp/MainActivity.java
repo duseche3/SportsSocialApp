@@ -47,9 +47,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        Intent myIntent = new Intent(this, UserRegistrationActivity.class);
-//
-//        startActivity(myIntent);
 
         ref = new Firebase(BuildConfig.FIREBASE_URL);
         ref.addAuthStateListener(new Firebase.AuthStateListener() {
