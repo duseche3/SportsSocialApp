@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,7 +43,9 @@ public class UserRegistration extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validate();
+                if(validate()){
+                    // create account
+                }
             }
         });
 
@@ -68,34 +71,102 @@ public class UserRegistration extends Activity {
     }
 
     private boolean validate(){
+        Boolean missing = false;
+        Boolean emailInvalid = false;
+        Boolean passwordInvalid = false;
 
-        String email = ((EditText) findViewById(R.id.userEmail)).getText().toString().trim().toLowerCase();
-        String regex = "^(.+)@(.+)$";
+        TextView nameErr = (TextView) findViewById(R.id.nameError);
+        TextView emailErr = (TextView) findViewById(R.id.emailError);
+        TextView passErr = (TextView) findViewById(R.id.passError);
+        TextView confirmErr = (TextView) findViewById(R.id.confirmError);
+        TextView dobErr = (TextView) findViewById(R.id.dobError);
+        TextView genderErr = (TextView) findViewById(R.id.genderError);
+        TextView errorMsg = (TextView) findViewById(R.id.errorMessage);
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()) {
-            Log.i("Email","invalid");
-            return false;
-        }
+        nameErr.setVisibility(View.INVISIBLE);
+        emailErr.setVisibility(View.INVISIBLE);
+        passErr.setVisibility(View.INVISIBLE);
+        confirmErr.setVisibility(View.INVISIBLE);
+        dobErr.setVisibility(View.INVISIBLE);
+        genderErr.setVisibility(View.INVISIBLE);
+        errorMsg.setText("");
 
-        EditText pass1 = (EditText) findViewById(R.id.userPassword);
-        EditText pass2 = (EditText) findViewById(R.id.userConfirmPassword);
 
-        if(!(pass1.getText().toString().trim().equals(pass2.getText().toString().trim())
-                && !pass1.getText().toString().trim().equals(""))){
-            Log.i("Email","not equals");
-
+        // name error checking
+        String name = ((EditText) findViewById(R.id.userName)).getText().toString().trim().toLowerCase();
+        if(name.equals("")){
+            missing = true;
+            nameErr.setVisibility(View.VISIBLE);
         }
         else
-            Log.i("Email","equals");
+            nameErr.setVisibility(View.INVISIBLE);
 
-        RadioGroup gender = (RadioGroup) findViewById(R.id.userGender);
-        if(gender.getCheckedRadioButtonId() == -1){
-            Log.i("Gender","none");
-            return false;
+        // email error checking
+        String email = ((EditText) findViewById(R.id.userEmail)).getText().toString().trim().toLowerCase();
+        if(!email.equals("")) {
+            String regex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(email);
+            if (!matcher.matches()) {
+                emailErr.setVisibility(View.VISIBLE);
+                emailInvalid = true;
+            }
+            else{
+                emailErr.setVisibility(View.INVISIBLE);
+            }
+        }
+        else{
+            emailErr.setVisibility(View.VISIBLE);
+            missing = true;
         }
 
-        return true;
+        // password error checking
+        String pass1 = ((EditText) findViewById(R.id.userPassword)).getText().toString().trim();
+        String pass2 = ((EditText) findViewById(R.id.userConfirmPassword)).getText().toString().trim();
+
+        if(pass1.equals("")){
+            missing = true;
+            passErr.setVisibility(View.VISIBLE);
+        }
+
+        if(pass2.equals("")){
+            missing = true;
+            confirmErr.setVisibility(View.VISIBLE);
+        }
+
+        if(!(pass1.equals(pass2))){
+            passwordInvalid = true;
+            confirmErr.setVisibility(View.VISIBLE);
+        }
+
+
+        // date of birth error checking
+        String dob = ((EditText) findViewById(R.id.userDob)).getText().toString().trim();
+        if(dob.equals("")){
+            missing = true;
+            dobErr.setVisibility(View.VISIBLE);
+        }
+
+        // gender error checking
+        RadioGroup gender = (RadioGroup) findViewById(R.id.userGender);
+        if(gender.getCheckedRadioButtonId() == -1){
+            missing = true;
+            genderErr.setVisibility(View.VISIBLE);
+        }
+
+        if(missing){
+            errorMsg.setText("Missing fields!");
+            return false;
+        }
+        else if(emailInvalid){
+            errorMsg.setText("Invalid email entered!");
+            return false;
+        }
+        else if(passwordInvalid){
+            errorMsg.setText("Passwords do not match!");
+            return false;
+        }
+        else
+            return true;
     }
 }
